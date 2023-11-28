@@ -42,7 +42,7 @@ There's two ways of running the game:
 2. Then just run the command `./runHangman` in your terminal
    > If it says something like "Permission Denied" then you will have to run `chmod +x runHangman` and then retry
 
-# OR
+### OR
 
 - NodeJS file (using node command)
 
