@@ -2,7 +2,7 @@
 
 ### Made in JavaScript to be used in the Terminal
 
-A simple **Hangman Game** I made for fun to be played in the terminal. It uses an API from [API Ninjas] (https://api-ninjas.com/) to get a random word each time the game is ran or restarted.
+A simple **Hangman Game** I made for fun to be played in the terminal. It uses an API from [API Ninjas](https://api-ninjas.com/) to get a random word each time the game is ran or restarted.
 
 > The player does have to get an api key in order to play the game **(It is free and you get 10,000 calls each month)**.
 
