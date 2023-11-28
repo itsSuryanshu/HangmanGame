@@ -19,7 +19,7 @@ class hangmanStages {
   }
 
   resetStage() {
-    this.#stage = 0;
+    this.#stage = 1;
     this.printStage();
   }
 

@@ -62,11 +62,9 @@ class Game {
       "- But be careful! If you get the letter or word wrong, you will go forward in stages."
     );
     console.log(
-      "- There is a total of 8 stages, once you reach the 8th stage, it's GAME OVER."
+      "- There is a total of 7 stages, once you reach the 7th stage, it's GAME OVER."
     );
-    console.log(
-      '- To quit the game, enter "^q" and to restart the game, enter "^r"'
-    );
+    console.log('- To quit the game, enter "^q"');
   };
 
   //user's input (letter or word)
@@ -82,11 +80,14 @@ class Game {
     }
     stage.printStage();
     let guess = this.userInput();
+
+    //quit
     if (guess === "^q") {
       this.endGame(true);
       this.#forceQuit = true;
       return;
     }
+
     if (guess.length > 1) {
       if (guess == this.#word) {
         this.#win = true;

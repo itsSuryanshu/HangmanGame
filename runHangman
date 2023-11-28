@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+echo "Loading..."
+sleep 3
+echo "Finding a word..."
+sleep 2
+cd public/
+node "main.js"

@@ -31,3 +31,21 @@ All you have to do is replace the "config.API_KEY" with your API Key in quotatio
 //ADD YOUR OWN API_KEY BELOW FROM https://api-ninjas.com/
 const apiKey = "EXAMPLE_API$KEY";
 ```
+
+## Running the game
+
+There's two ways of running the game:
+
+- BASH file (using the ./ command)
+
+1. Open up terminal (MacOS) or Command Prompt (Windows), navigate to where this Hangman Game folder resides using `cd` command
+2. Then just run the command `./runHangman` in your terminal
+   > If it says something like "Permission Denied" then you will have to run `chmod +x runHangman` and then retry
+
+# OR
+
+- NodeJS file (using node command)
+
+1. Open up terminal (MacOS) or Command Prompt (Windows), navigate to where this Hangman Game folder resides using `cd` command
+2. Then go into the public folder using the `cd` command again
+3. Now run `node main.js`
