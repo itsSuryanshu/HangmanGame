@@ -9,6 +9,7 @@
   "author": "Suryanshu Singh",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.4.0",
     "config": "^3.3.9",
     "dotenv": "^16.3.1",
     "node-fetch": "^2.7.0",

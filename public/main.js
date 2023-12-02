@@ -1,37 +1,65 @@
 const { hangmanStages } = require("./hangmanStages.js");
 const { getRandomWord } = require("./word.js");
 const prompt = require("prompt-sync")();
+const colors = require("colors/safe");
 
 class Game {
   #word;
-  #hiddenWord;
+  hiddenWord;
   #lives = 7;
   #win = false;
-  #forceQuit = false;
+  forceQuit = false;
+
+  get getWord() {
+    return this.#word;
+  }
+
+  set setWord(word) {
+    this.#word = word;
+  }
+
+  get getLives() {
+    return this.#lives;
+  }
+
+  decrementLives() {
+    this.#lives--;
+  }
+
+  get getStatus() {
+    return this.#win;
+  }
+
+  toggleStatus() {
+    this.#win = !this.#win;
+  }
+
   startGame = async () => {
-    this.#word = await getRandomWord();
+    let word = await getRandomWord();
+    this.setWord = word;
     //this.#word = "call";
-    this.#hiddenWord = "_".repeat(this.#word.length);
+    this.hiddenWord = "_".repeat(this.getWord.length);
 
     //print out the instructions
     this.printInstructions();
 
+    let guesses = [];
     const stage = new hangmanStages();
 
     //print out the stage and lives (set up the game console UI)
     while (
-      this.#lives > 0 &&
-      this.#win === false &&
-      this.#forceQuit === false
+      this.getLives > 0 &&
+      this.getStatus === false &&
+      this.forceQuit === false
     ) {
-      console.log(`\n== WORD: ${this.#hiddenWord} ==`);
-      console.log(`Lives: ${this.#lives}`);
-      this.game(stage);
+      console.log(`\n== WORD: ${this.hiddenWord} ==`);
+      console.log(`Lives: ${this.getLives}`);
+      this.game(stage, guesses);
     }
 
     //end the game properly
-    if (!this.#win) {
-      if (this.#forceQuit) {
+    if (!this.getStatus) {
+      if (this.forceQuit) {
         return;
       } else {
         this.endGame();
@@ -40,14 +68,14 @@ class Game {
   };
 
   endGame = (manual = false) => {
-    if (!this.#win && manual) {
-      console.log("\n== Game Ended ==");
-    } else if (!this.#win && !manual) {
-      console.log("\n== GAME OVER ==");
-      console.log(`THE WORD WAS: ${this.#word}`);
+    if (!this.getStatus && manual) {
+      console.log(colors.red("\n== Game Ended =="));
+    } else if (!this.getStatus && !manual) {
+      console.log(colors.red("\n== GAME OVER =="));
+      console.log(colors.red(`THE WORD WAS: ${this.getWord}`));
     } else {
-      console.log("\nCONGRATULATIONS, GAME WON!");
-      console.log(`THE WORD WAS: ${this.#word}`);
+      console.log(colors.green("\nCONGRATULATIONS, GAME WON!"));
+      console.log(colors.green(`THE WORD WAS: ${this.getWord}`));
     }
     return;
   };
@@ -69,51 +97,69 @@ class Game {
 
   //user's input (letter or word)
   userInput = () => {
-    return prompt("Your Guess: ").toLowerCase();
+    return prompt(colors.green("Your Guess: ")).toLowerCase();
   };
 
-  game(stage) {
-    if (!this.#hiddenWord.includes("_")) {
-      this.#win = true;
+  game(stage, guesses) {
+    if (!this.hiddenWord.includes("_")) {
+      this.toggleStatus();
       this.endGame();
       return;
     }
+    let guess;
+    let valid = false;
     stage.printStage();
-    let guess = this.userInput();
 
-    //quit
-    if (guess === "^q") {
-      this.endGame(true);
-      this.#forceQuit = true;
-      return;
+    //print out the player's guess
+    if (guesses.length > 0) {
+      console.log(`Your guesses: ${guesses}`);
     }
+    do {
+      guess = this.userInput();
+
+      //quit
+      if (guess === "^q") {
+        this.endGame(true);
+        this.forceQuit = true;
+        return;
+      }
+
+      if (guesses.includes(guess)) {
+        console.log(colors.yellow(`!!! You have already guessed ${guess} !!!`));
+      } else {
+        valid = true;
+      }
+    } while (!valid);
+
+    //update guesses list with the new guess
+    guesses.push(guess);
 
     if (guess.length > 1) {
-      if (guess == this.#word) {
-        this.#win = true;
+      if (guess == this.getWord) {
+        this.toggleStatus();
         this.endGame();
         return;
       } else {
-        this.#lives--;
+        this.decrementLives();
         stage.incrementStage();
       }
     } else {
-      if (this.#word.includes(guess)) {
+      if (this.getWord.includes(guess)) {
         let indexes = [];
-        for (let i = 0; i < this.#word.length; i++) {
-          if (this.#word[i] === guess) {
+        for (let i = 0; i < this.getWord.length; i++) {
+          if (this.getWord[i] === guess) {
             indexes.push(i);
           }
         }
         for (let x in indexes) {
-          this.#hiddenWord =
-            this.#hiddenWord.substring(0, indexes[x]) +
-            this.#word[indexes[x]] +
-            this.#hiddenWord.substring(indexes[x] + 1);
+          this.hiddenWord =
+            this.hiddenWord.substring(0, indexes[x]) +
+            this.getWord[indexes[x]] +
+            this.hiddenWord.substring(indexes[x] + 1);
         }
-        return this.#hiddenWord;
+        return this.hiddenWord;
       } else {
-        this.#lives--;
+        this.decrementLives();
         stage.incrementStage();
       }
     }
